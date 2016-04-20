@@ -26,17 +26,31 @@ class Hangman
     puts "**************************"
 
     setup
+    until @board.all?{|x| x!= nil}
+      screen = display_board
+      puts "current board: #{screen}"
+      puts "next guess?"
+      guess = gets.chomp
+    end
+
   end
+
+  def display_board
+    display = ""
+    @board.each do |x|
+      if x.nil?
+        display << "_"
+      else
+        display << x
+      end
+    end
+    display
+  end
+  
   def setup
     secret_length = @referee.pick_secret_word
-    puts "#{secret_length} this is secret_length"
-    puts "#{@referee.secret_word.length} is the actual word length"
-    p @referee.secret_word
     guesser_length = @guesser.register_secret_length(secret_length) #this is where @candidate_words
     @board = Array.new(secret_length)
-    puts "#{@referee.secret_word} is the secret word"
-    print "#{@board.length} is board length vs #{secret_length} is length "
-    # puts "#{@guesser.name}, your secret word has length of #{sec_length}"
   end
 
   def take_turn
