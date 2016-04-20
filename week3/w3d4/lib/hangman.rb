@@ -29,8 +29,14 @@ class Hangman
   end
   def setup
     secret_length = @referee.pick_secret_word
-    guesser_length = @guesser.register_secret_length(secret_length)
+    puts "#{secret_length} this is secret_length"
+    puts "#{@referee.secret_word.length} is the actual word length"
+    p @referee.secret_word
+    guesser_length = @guesser.register_secret_length(secret_length) #this is where @candidate_words
     @board = Array.new(secret_length)
+    puts "#{@referee.secret_word} is the secret word"
+    print "#{@board.length} is board length vs #{secret_length} is length "
+    # puts "#{@guesser.name}, your secret word has length of #{sec_length}"
   end
 
   def take_turn
@@ -55,6 +61,7 @@ end
 class HumanPlayer
   attr_reader :secret_word, :candidate_words, :name
   def initialize
+    @dictionary = File.readlines("dictionary.txt")
   end
 
   def pick_secret_word
@@ -93,7 +100,7 @@ class ComputerPlayer
   end
 
   def random_word_pick(loaded_dictionary = File.readlines("dictionary.txt").sample)
-    @secret_word = loaded_dictionary.sample
+    @secret_word = loaded_dictionary.delete!("\n") #<== removes newline from adding extra length
   end
 
   def check_guess(argument)
