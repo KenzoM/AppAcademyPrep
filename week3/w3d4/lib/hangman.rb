@@ -36,14 +36,14 @@ class Hangman
       break if @board.all?{|x| x!= nil}
     end
     if @num_remaining_guesses == 0
-      puts "Sorry, you lost!"
+      puts "\nSorry, you lost!"
+      puts "the correct answer was #{referee.secret_word} "
     else
       puts "Congralutaion, you won!"
     end
   end
 
   def display_board
-    # debugger
     display = ""
     @board.each do |x|
       if x.nil?
@@ -65,9 +65,7 @@ class Hangman
   def take_turn
     display_board
     guesser_answer = @guesser.guess
-    # p "#{guesser_answer} is #{guesser.name} guess baby!"
     check_indeces = referee.check_guess(guesser_answer)
-    # p "#{guesser_answer} is guesser answer vs #{check_indeces} check indeces"
     update_board(guesser_answer, check_indeces)
     guesser.handle_response(guesser_answer, check_indeces)
     @num_remaining_guesses -= 1 if check_indeces.empty?
@@ -78,10 +76,6 @@ class Hangman
   def update_board(guess_answer, indices)
     indices.each {|idx| @board[idx] = guess_answer}
   end
-  # guess = @guesser.guess(@board)
-  # indices = @referee.check_guess(guess)
-  # update_board(guess, indices)
-  # @num_remaining_guesses -= 1 if indices.empty?
 
 end
 
@@ -103,12 +97,18 @@ class HumanPlayer
     @candidate_words = @dictionary.select{|word| word.length == secret_length}
   end
   def guess
-    puts "#{name}, you what is your guess"
-    gets.chomp.downcase
+    puts "#{name}, what is your guess"
+    answer = gets.chomp.downcase
+    until (answer.length == 1) && (answer.is_a? String)
+      puts "Invalid input! Please try again"
+      answer = gets.chomp.downcase
+    end
+    answer
   end
   def check_guess
   end
   def handle_response(guess, response_indices)
+    #no implementation needed
   end
 end
 
