@@ -21,7 +21,6 @@ class Hangman
       @guesser.get_name(gets.chomp)
     end
     system('clear')
-    debugger
     puts "**************************"
     puts "Here are your players!!"
     puts "1: #{@referee.name} is the referee"
@@ -30,15 +29,13 @@ class Hangman
 
     setup
     until @board.all?{|x| x!= nil}
-      screen = display_board
-      puts "current board: #{screen}"
-      puts "next guess?"
-      guess = gets.chomp
+      take_turn
     end
 
   end
 
   def display_board
+    # debugger
     display = ""
     @board.each do |x|
       if x.nil?
@@ -47,20 +44,24 @@ class Hangman
         display << x
       end
     end
-    display
+    puts "Current board: #{display}"
   end
 
   def setup
     secret_length = @referee.pick_secret_word
+    p "#{@referee.secret_word} is the secret word"
     guesser_length = @guesser.register_secret_length(secret_length) #this is where @candidate_words
     @board = Array.new(secret_length)
   end
 
   def take_turn
+    display_board
     guesser_answer = @guesser.guess
+    # p "#{guesser_answer} is #{guesser.name} guess baby!"
     check_indeces = referee.check_guess(guesser_answer)
-    # p "#{guesser_answer} is guesser answer vs #{check_indeces} check indeces"
+    p "#{guesser_answer} is guesser answer vs #{check_indeces} check indeces"
     update_board(guesser_answer, check_indeces)
+    display_board
     guesser.handle_response(guesser_answer, check_indeces)
   end
 
@@ -93,10 +94,13 @@ class HumanPlayer
     @candidate_words = @dictionary.select{|word| word.length == secret_length}
   end
   def guess
+    puts "#{name}, you what is your guess"
+    gets.chomp.downcase
   end
   def check_guess
   end
-  def handle_response
+  def handle_response(guess, response_indices)
+    puts "this is #{guess} guess variable and #{response_indices} is indices"
   end
 end
 
