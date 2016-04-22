@@ -56,15 +56,17 @@ class Hangman
   end
 
   def setup
+    # debugger
     secret_length = @referee.pick_secret_word
     p "#{@referee.secret_word} is the secret word"
+    # debugger
     guesser_length = @guesser.register_secret_length(secret_length) #this is where @candidate_words
     @board = Array.new(secret_length)
   end
 
   def take_turn
     display_board
-    guesser_answer = @guesser.guess
+    guesser_answer = @guesser.guess(@board)
     check_indeces = referee.check_guess(guesser_answer)
     update_board(guesser_answer, check_indeces)
     guesser.handle_response(guesser_answer, check_indeces)
@@ -88,6 +90,11 @@ class HumanPlayer
   def pick_secret_word
     puts "Pick a secret word (only length)"
     length = gets.chomp.to_i
+    random_word_pick(length).length
+  end
+
+  def random_word_pick(secret_length)
+    @secret_word = @dictionary.select{|x| x.delete!("\n").length == secret_length}.sample
   end
   def get_name(user_name)
     @name = user_name
@@ -96,7 +103,7 @@ class HumanPlayer
   def register_secret_length(secret_length)
     @candidate_words = @dictionary.select{|word| word.length == secret_length}
   end
-  def guess
+  def guess(board)
     puts "#{name}, what is your guess"
     answer = gets.chomp.downcase
     until (answer.length == 1) && (answer.is_a? String)
@@ -105,7 +112,12 @@ class HumanPlayer
     end
     answer
   end
-  def check_guess
+  def check_guess(argument)
+    correct_indeces = []
+    secret_word.split(//).each_with_index do |letter, idx|
+      correct_indeces << idx if argument == letter
+    end
+    correct_indeces
   end
   def handle_response(guess, response_indices)
     #no implementation needed
@@ -115,7 +127,7 @@ end
 class ComputerPlayer
   attr_reader :secret_word, :name
   attr_accessor :candidate_words
-  def initialize(dictionary = nil)
+  def initialize(dictionary = File.readlines("dictionary.txt"))
     @dictionary = dictionary
     @name = "Albert, the Computer Machine"
   end
@@ -142,7 +154,7 @@ class ComputerPlayer
 
   #~~~~~~~Phase II~~~~~~~!
   def register_secret_length(secret_length) ##Check this ..
-    @candidate_words = @dictionary.select{|word| word.length == secret_length}
+    @candidate_words = @dictionary.select{|word| word.delete!("\n").length == secret_length}
   end
 
   def guess(board)
