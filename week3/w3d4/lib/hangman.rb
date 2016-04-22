@@ -13,6 +13,9 @@ class Hangman
     prompt_players_intro
   end
 
+  def stars
+    puts "************************************"
+  end
   def prompt_players_intro
     if @referee.class == HumanPlayer
       puts "What is your name, referee?"
@@ -23,23 +26,24 @@ class Hangman
       @guesser.get_name(gets.chomp)
     end
     system('clear')
-    puts "**************************"
+    stars
     puts "Here are your players!!"
     puts "1: #{@referee.name} is the referee"
     puts "2: #{@guesser.name} is the guesser"
-    puts "**************************"
+    stars
 
     setup
-    # until @board.all?{|x| x!= nil}
     while num_remaining_guesses != 0
       take_turn
       break if @board.all?{|x| x!= nil}
     end
+
     if @num_remaining_guesses == 0
       puts "\nSorry, you lost!"
       puts "the correct answer was #{referee.secret_word} "
     else
       puts "Congralutaion, you won!"
+      puts "the correct answer was #{referee.secret_word} "
     end
   end
 
@@ -52,33 +56,34 @@ class Hangman
         display << x
       end
     end
-    puts "Current board: #{display}"
+    puts "Current board: #{display}  (total length: #{@board.length})"
   end
 
   def setup
-    # debugger
+
     secret_length = @referee.pick_secret_word
-    p "#{@referee.secret_word} is the secret word"
-    # debugger
+    # p "#{@referee.secret_word} is the secret word"
+    # stars
+    #uncomment above to reveal the secret word for debugging
     guesser_length = @guesser.register_secret_length(secret_length) #this is where @candidate_words
     @board = Array.new(secret_length)
   end
 
   def take_turn
     display_board
+    puts "You have #{num_remaining_guesses} remaining guess left"
     guesser_answer = @guesser.guess(@board)
     check_indeces = referee.check_guess(guesser_answer)
     update_board(guesser_answer, check_indeces)
     guesser.handle_response(guesser_answer, check_indeces)
     @num_remaining_guesses -= 1 if check_indeces.empty?
-    puts "You have #{num_remaining_guesses} remaining guess left"
+    puts
+    stars
   end
-
 
   def update_board(guess_answer, indices)
     indices.each {|idx| @board[idx] = guess_answer}
   end
-
 end
 
 class HumanPlayer
@@ -141,7 +146,7 @@ class ComputerPlayer
   end
 
   def random_word_pick(loaded_dictionary = File.readlines("dictionary.txt").sample)
-    @secret_word = loaded_dictionary.delete!("\n") #<== removes newline from adding extra length
+    @secret_word = @dictionary.sample.delete!("\n") #<== removes newline from adding extra length
   end
 
   def check_guess(argument)
@@ -160,6 +165,8 @@ class ComputerPlayer
   def guess(board)
     table = freq_table(board)
     letter = table.sort {|a,b| b[1]<=>a[1]}.first[0]
+    puts "->Computer guess the letter '#{letter}'"
+    letter
   end
 
   def freq_table(board)
@@ -187,7 +194,6 @@ class ComputerPlayer
       should_delete
     end
   end
-
 end
 
 if $PROGRAM_NAME == __FILE__
