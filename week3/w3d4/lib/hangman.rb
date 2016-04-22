@@ -1,3 +1,5 @@
+require 'byebug'
+
 class Hangman
   attr_reader :guesser, :referee, :board
   def initialize(players)
@@ -19,6 +21,7 @@ class Hangman
       @guesser.get_name(gets.chomp)
     end
     system('clear')
+    debugger
     puts "**************************"
     puts "Here are your players!!"
     puts "1: #{@referee.name} is the referee"
@@ -46,7 +49,7 @@ class Hangman
     end
     display
   end
-  
+
   def setup
     secret_length = @referee.pick_secret_word
     guesser_length = @guesser.register_secret_length(secret_length) #this is where @candidate_words
