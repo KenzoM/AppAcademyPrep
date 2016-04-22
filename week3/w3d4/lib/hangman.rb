@@ -1,10 +1,12 @@
 require 'byebug'
 
 class Hangman
-  attr_reader :guesser, :referee, :board
+  MAX_GUESSES = 8
+  attr_reader :guesser, :referee, :board, :num_remaining_guesses
   def initialize(players)
     @guesser = players[:guesser]
     @referee = players[:referee]
+    @num_remaining_guesses = MAX_GUESSES
   end
 
   def start_game
@@ -28,10 +30,16 @@ class Hangman
     puts "**************************"
 
     setup
-    until @board.all?{|x| x!= nil}
+    # until @board.all?{|x| x!= nil}
+    while num_remaining_guesses != 0
       take_turn
+      break if @board.all?{|x| x!= nil}
     end
-
+    if @num_remaining_guesses == 0
+      puts "Sorry, you lost!"
+    else
+      puts "Congralutaion, you won!"
+    end
   end
 
   def display_board
@@ -59,10 +67,11 @@ class Hangman
     guesser_answer = @guesser.guess
     # p "#{guesser_answer} is #{guesser.name} guess baby!"
     check_indeces = referee.check_guess(guesser_answer)
-    p "#{guesser_answer} is guesser answer vs #{check_indeces} check indeces"
+    # p "#{guesser_answer} is guesser answer vs #{check_indeces} check indeces"
     update_board(guesser_answer, check_indeces)
-    display_board
     guesser.handle_response(guesser_answer, check_indeces)
+    @num_remaining_guesses -= 1 if check_indeces.empty?
+    puts "You have #{num_remaining_guesses} remaining guess left"
   end
 
 
@@ -100,7 +109,6 @@ class HumanPlayer
   def check_guess
   end
   def handle_response(guess, response_indices)
-    puts "this is #{guess} guess variable and #{response_indices} is indices"
   end
 end
 
