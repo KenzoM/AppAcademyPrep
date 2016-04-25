@@ -42,11 +42,13 @@ class Board
   end
   def place_random_ship
     raise StandardError if full?
-    new_pos = random_pos
-    until empty?(new_pos) ##good trick!
+    until self.count == 50
       new_pos = random_pos
+      until empty?(new_pos) ##good trick!
+        new_pos = random_pos
+      end
+      self[new_pos] = :s
     end
-    self[new_pos] = :s
   end
   def random_pos
     [rand(grid.size), rand(grid.size)]
