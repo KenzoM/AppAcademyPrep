@@ -9,12 +9,10 @@ class BattleshipGame
   end
   def play
     board.place_random_ship
-    until board.won?
+    until game_over?
       board.display
-      player_input = player.get_play
-      puts "Player said #{player_input}"
-      puts "#{board.grid} is the grid"
-      puts "#{board.count} is the number of ships"
+      p board.grid
+      play_turn
     end
   end
   def [](pos)
@@ -24,7 +22,7 @@ class BattleshipGame
 
   def []=(pos,mark)
     x, y = pos
-    # p "#{x} is x and #{y} is y and #{mark} is mark"
+    p "#{x} is x and #{y} is y and #{mark} is mark"
     board.grid[x][y] = mark
   end
 

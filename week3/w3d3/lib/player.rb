@@ -7,7 +7,8 @@ class HumanPlayer
   end
 
   def get_play
-    puts "Choose a position?"
+    puts "User, please enter position"
+    puts "Ex: 0,0 .. 4,6"
     gets.chomp.split(",").map { |el| Integer(el) }
   end
 end
