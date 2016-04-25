@@ -6,8 +6,12 @@ class HumanPlayer
     @name = name
   end
 
+  def prompt
+      puts "User, please enter position"
+  end
+  
   def get_play
-    puts "User, please enter position"
+    prompt
     puts "Ex: 0,0 .. 4,6"
     gets.chomp.split(",").map { |el| Integer(el) }
   end

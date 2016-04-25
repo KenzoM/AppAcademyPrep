@@ -2,7 +2,8 @@ class Board
   LEGENDS = {
     nil => " ",
     :s => " ",
-    :x => "x"
+    :x => "x",
+    :a => "a"
   }
   attr_accessor :grid
   def initialize(grid = Board.default_grid) #is this the samething with self.class.default_grid?
@@ -11,6 +12,10 @@ class Board
 
   def self.random
     self.new(self.default_grid)
+  end
+
+  def ship_attacked
+
   end
 
   def [](pos)
@@ -42,7 +47,7 @@ class Board
   end
   def place_random_ship
     raise StandardError if full?
-    until self.count == 50
+    until self.count == 2
       new_pos = random_pos
       until empty?(new_pos) ##good trick!
         new_pos = random_pos
@@ -69,6 +74,7 @@ class Board
     p "#{i} #{chars}"
   end
   def in_range?(pos)
+    raise Alert if !pos.is_a?(Array)
     pos.all? { |x| x.between?(0, grid.length) }
   end
 end

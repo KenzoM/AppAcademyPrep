@@ -14,6 +14,7 @@ class BattleshipGame
       p board.grid
       play_turn
     end
+    puts "Congrats! You've won"
   end
   def [](pos)
     x, y = pos
@@ -22,8 +23,14 @@ class BattleshipGame
 
   def []=(pos,mark)
     x, y = pos
-    p "#{x} is x and #{y} is y and #{mark} is mark"
-    board.grid[x][y] = mark
+    # p "#{x} is x and #{y} is y and #{mark} is mark"
+    if board.grid[x][y] == :s
+      board.grid[x][y] = :a
+    elsif board.grid[x][y] == :a
+      puts "Already Attacked!"
+    else
+       board.grid[x][y] = mark
+     end
   end
 
   def attack(pos)
@@ -40,8 +47,15 @@ class BattleshipGame
 
   def play_turn
     pos = player.get_play
-    p "#{pos} is what pos"
+    puts "This is pos:#{pos} "
+    until valid_play?(pos)
+      puts "Try again! Wrong input"
+      pos = player.get_play
+    end
     attack(pos)
+  end
+  def valid_play?(pos)
+    board.in_range?(pos)
   end
 end
 
