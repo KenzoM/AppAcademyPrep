@@ -9,6 +9,10 @@ class Board
     @grid = grid
   end
 
+  def self.random
+    self.new(self.default_grid)
+  end
+
   def [](pos)
     x, y = pos
     grid[x][y]
@@ -24,23 +28,9 @@ class Board
   end
 
   def count
-    # count_total = 0
-    # grid.each do |row|
-    #   row.each do |col|
-    #     count_total += 1 if col == :s
-    #   end
-    # end
-    # count_total
     grid.flatten.select { |el| el == :s }.length ##REFACTORED!!
   end
   def empty?(position = nil)
-    # return grid[position[0]][position[1]].nil? if !position.nil?
-    # grid.each do |row|
-    #   row.each do |col|
-    #     return false if col != nil
-    #   end
-    # end
-    # return true
     if position
       self[position].nil?
     else

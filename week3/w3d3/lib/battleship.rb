@@ -7,7 +7,16 @@ class BattleshipGame
     @player = player
     @board = board
   end
-
+  def play
+    board.place_random_ship
+    until board.won?
+      board.display
+      player_input = player.get_play
+      puts "Player said #{player_input}"
+      puts "#{board.grid} is the grid"
+      puts "#{board.count} is the number of ships"
+    end
+  end
   def [](pos)
     x, y = pos
     board.grid[x][y]
@@ -36,5 +45,8 @@ class BattleshipGame
     p "#{pos} is what pos"
     attack(pos)
   end
+end
 
+if __FILE__ == $PROGRAM_NAME
+  BattleshipGame.new.play
 end
