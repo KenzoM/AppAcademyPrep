@@ -8,11 +8,15 @@ class BattleshipGame
     @board = board
   end
   def play
+    stars_prompt
     board.place_random_ship
     until game_over?
+      stars_prompt
+      puts "Number of battleships left: #{board.count}"
       board.display
-      p board.grid
       play_turn
+      system('clear')
+      stars_prompt
     end
     puts "Congrats! You've won"
   end
@@ -47,7 +51,6 @@ class BattleshipGame
 
   def play_turn
     pos = player.get_play
-    puts "This is pos:#{pos} "
     until valid_play?(pos)
       puts "Try again! Wrong input"
       pos = player.get_play
@@ -57,8 +60,14 @@ class BattleshipGame
   def valid_play?(pos)
     board.in_range?(pos)
   end
+
+  def stars_prompt
+    puts "***********************"
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME
+  system('clear')
+  puts "Let's play BattleShip!"
   BattleshipGame.new.play
 end

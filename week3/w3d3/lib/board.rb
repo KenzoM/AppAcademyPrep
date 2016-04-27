@@ -47,7 +47,7 @@ class Board
   end
   def place_random_ship
     raise StandardError if full?
-    until self.count == 2
+    until self.count == 50 #here is the total of battleships
       new_pos = random_pos
       until empty?(new_pos) ##good trick!
         new_pos = random_pos

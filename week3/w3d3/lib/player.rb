@@ -9,10 +9,10 @@ class HumanPlayer
   def prompt
       puts "User, please enter position"
   end
-  
+
   def get_play
     prompt
-    puts "Ex: 0,0 .. 4,6"
+    puts "Ex: 0,0 or 4,6"
     gets.chomp.split(",").map { |el| Integer(el) }
   end
 end
