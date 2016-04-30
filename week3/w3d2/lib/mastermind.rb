@@ -11,6 +11,7 @@ class Code
   def initialize(pegs)
     @pegs = pegs
   end
+
   def self.parse(str)
     pegs = []
     str.each_char do |color|
@@ -19,6 +20,7 @@ class Code
     end
     Code.new(pegs)
   end
+
   def self.random
     random_code = []
     4.times do |random_color| ##REFACTOR THIS!!!!!!
@@ -26,6 +28,7 @@ class Code
     end
     Code.new(random_code)
   end
+
   def [](index)
     @pegs[index]
   end
@@ -65,17 +68,20 @@ class Code
 end
 
 class Game
+  MAX_GUESSES = 5
   attr_reader :secret_code
+
   def initialize (secret_code = Code.random)
     @secret_code = secret_code
   end
+
   def get_guess
-    puts "Care to guess the right number?"
+    puts "Care to guess the right code?"
     begin
       Code.parse(gets.chomp)
     rescue
       puts "Error parsing code!"
-      retry
+    retry
     end
   end
 
@@ -86,4 +92,28 @@ class Game
     puts "You got #{exact_matches} exact matches!"
     puts "You got #{near_matches} near matches!"
   end
+
+  def lets_play
+    MAX_GUESSES.times do |left_guess|
+      puts "Remaining guesses : #{remaining_guess(left_guess)}"
+      guess = get_guess
+      break if win?(guess)
+      display_matches(guess)
+      # puts "HINT: answer is #{secret_code.pegs}"
+    end
+  end
+
+  def remaining_guess(left_chances)
+    5-left_chances
+  end
+
+  def win?(guess)
+    secret_code == guess ? true : false
+  end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  system('clear')
+  puts "Let's play Mastermind!"
+  Game.new.lets_play
 end
